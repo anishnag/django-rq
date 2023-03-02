@@ -76,6 +76,8 @@ def get_redis_connection(config, use_strict_redis=False):
     """
     redis_cls = redis.StrictRedis if use_strict_redis else redis.Redis
 
+    print("config: %s" % str(config))
+
     if 'URL' in config:
         if config.get('SSL') or config.get('URL').startswith('rediss://'):
             return redis_cls.from_url(
