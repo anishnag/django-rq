@@ -126,16 +126,22 @@ def get_redis_connection(config, use_strict_redis=False):
             redis_class=redis_cls,
         )
 
-    return redis_cls(
-        host=config['HOST'],
-        port=config['PORT'],
-        db=config.get('DB', 0),
-        username=config.get('USERNAME', None),
-        password=config.get('PASSWORD'),
-        ssl=config.get('SSL', False),
-        ssl_cert_reqs=config.get('SSL_CERT_REQS', 'required'),
-        **config.get('REDIS_CLIENT_KWARGS', {})
-    )
+    try:
+        connection = redis_cls(
+            host=config['HOST'],
+            port=config['PORT'],
+            db=config.get('DB', 0),
+            username=config.get('USERNAME', None),
+            password=config.get('PASSWORD'),
+            ssl=config.get('SSL', False),
+            ssl_cert_reqs=config.get('SSL_CERT_REQS', 'required'),
+            **config.get('REDIS_CLIENT_KWARGS', {})
+        )
+    except Exception as e:
+        print("Connection error: %s" % str(e))
+        raise e
+
+    return connection
 
 
 def get_connection(name='default', use_strict_redis=False):
